@@ -46,6 +46,9 @@ RUN	addgroup -gid ${USER} steam && \
 	curl -sqL ${STEAMCMDURL} | tar zxfv - && \
 	chown -R ${USER}:${USER} ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs
 
+# Blacklist the DST_Root_CA_X3 cert to fix Let's Encrypt
+RUN     sed -i 's#mozilla/DST_Root_CA_X3.crt#!mozilla/DST_Root_CA_X3.crt#' /etc/ca-certificates.conf && update-ca-certificates
+
 COPY	./start_neosvr.sh ${STEAMAPPDIR}/
 
 RUN	chown -R ${USER}:${USER} ${STEAMAPPDIR}/start_neosvr.sh && \
