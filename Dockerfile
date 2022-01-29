@@ -2,6 +2,9 @@ FROM mono
 
 LABEL name=neosvr-headless maintainer="panther.ru@gmail.com"
 
+ARG	HOSTUSERID
+ARG	HOSTGROUPID
+
 ENV	STEAMAPPID=740250 \
 	STEAMAPP=neosvr \
 	STEAMCMDURL="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" \
@@ -9,8 +12,8 @@ ENV	STEAMAPPID=740250 \
 	STEAMBETA=__CHANGEME__ \
 	STEAMBETAPASSWORD=__CHANGEME__ \
 	STEAMLOGIN=__CHANGEME__ \
-	USER=1000 \
-	HOMEDIR=/home/steam
+	USER=neos \
+	HOMEDIR=/home/neos
 ENV	STEAMAPPDIR="${HOMEDIR}/${STEAMAPP}-headless"
 
 # Prepare the basic environment
@@ -34,14 +37,17 @@ RUN	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
 ENV	LANG en_GB.UTF-8 
 
 # Create user, install SteamCMD
-RUN	addgroup -gid ${USER} steam && \
-	adduser --disabled-login \
+# Create user, install SteamCMD
+RUN	addgroup --gid ${HOSTGROUPID} ${USER}
+
+RUN	adduser --disabled-login \
 		--shell /bin/bash \
 		--gecos "" \
-		--gid ${USER} \
-		--uid ${USER} \
-		steam && \
-	mkdir -p ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs && \
+		--gid ${HOSTGROUPID} \
+		--uid ${HOSTUSERID} \
+		${USER}
+
+RUN	mkdir -p ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs && \
 	cd ${STEAMCMDDIR} && \
 	curl -sqL ${STEAMCMDURL} | tar zxfv - && \
 	chown -R ${USER}:${USER} ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs
