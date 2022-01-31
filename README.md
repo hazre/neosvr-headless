@@ -1,5 +1,7 @@
 # neosvr-headless
-Docker image of a NeosVR headless server
+Docker image of a NeosVR headless server, forked from https://github.com/shadowpanther/neosvr-headless
+
+Changed the behavior to map the UID of the internal docker image to the user who is maintaining the Config/Logs. Also added a work-around for the expired Let's Encrypt certificate so that the headless server can connect to hosts via HTTP GET/POST, WebSockets, etc.
 
 See NeosVR Discord for beta access key. Steam login is required to download the client. You'll have to disable SteamGuard, so probably create a separate Steam account for your headless server.
 
