@@ -1,17 +1,21 @@
-version: "3.3"
+version: "3.9"
 services:
-  image:
-    image: shadowpanther/neosvr-headless:latest
-    container_name: neosvr-headless
+  neosvr-headless:
+    build:
+      context: https://github.com/Bontebok/neosvr-headless.git
+      args:
+       - HOSTUSERID=${HOSTUSERID:-1000}
+       - HOSTGROUPID=${HOSTGROUPID:-1000}
     tty: true
     stdin_open: true
     environment:
-      STEAMBETA: CHANGEME
-      STEAMBETAPASSWORD: CHANGEME
-      STEAMLOGIN: "USER PASSWORD"
+      - STEAMBETA=${STEAMBETA}
+      - STEAMBETAPASSWORD=${STEAMBETAPASSWORD}
+      - STEAMLOGIN=${STEAMLOGIN}
+      - CLEANASSETS=${CLEANASSETS:-true}
+      - CLEANLOGS=${CLEANLOGS:-true}
     volumes:
-      - "./Config:/Config:ro"
+      - "./Config:/Config"
       - "./Logs:/Logs"
       - "/etc/localtime:/etc/localtime:ro"
     restart: unless-stopped
-
