@@ -34,9 +34,11 @@ RUN	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
 	update-locale LANG=en_GB.UTF-8 && \
 	rm -rf /var/lib/{apt,dpkg,cache}
 
-ENV	LANG en_GB.UTF-8 
+ENV	LANG en_GB.UTF-8
 
-# Create user, install SteamCMD
+# Fix the LetsEncrypt CA cert
+RUN	sed -i 's#mozilla/DST_Root_CA_X3.crt#!mozilla/DST_Root_CA_X3.crt#' /etc/ca-certificates.conf && update-ca-certificates
+
 # Create user, install SteamCMD
 RUN	addgroup --gid ${HOSTGROUPID} ${USER}
 
@@ -47,18 +49,15 @@ RUN	adduser --disabled-login \
 		--uid ${HOSTUSERID} \
 		${USER}
 
-RUN	mkdir -p ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs && \
+RUN	mkdir -p ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs /Scripts && \
 	cd ${STEAMCMDDIR} && \
 	curl -sqL ${STEAMCMDURL} | tar zxfv - && \
 	chown -R ${USER}:${USER} ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs
 
-# Blacklist the DST_Root_CA_X3 cert to fix Let's Encrypt
-RUN     sed -i 's#mozilla/DST_Root_CA_X3.crt#!mozilla/DST_Root_CA_X3.crt#' /etc/ca-certificates.conf && update-ca-certificates
+COPY	./setup_neosvr.sh ./start_neosvr.sh /Scripts
 
-COPY	./start_neosvr.sh ${STEAMAPPDIR}/
-
-RUN	chown -R ${USER}:${USER} ${STEAMAPPDIR}/start_neosvr.sh && \
-	chmod +x ${STEAMAPPDIR}/start_neosvr.sh
+RUN	chown -R ${USER}:${USER} /Scripts/setup_neosvr.sh /Scripts/start_neosvr.sh && \
+	chmod +x /Scripts/setup_neosvr.sh /Scripts/start_neosvr.sh
 
 # Switch to user
 USER ${USER}
@@ -67,4 +66,7 @@ WORKDIR ${STEAMAPPDIR}
 
 VOLUME ["${STEAMAPPDIR}", "/Config", "/Logs"]
 
-CMD ["bash", "start_neosvr.sh"]
+STOPSIGNAL SIGINT
+
+ENTRYPOINT ["/Scripts/setup_neosvr.sh"]
+CMD ["/Scripts/start_neosvr.sh"]
