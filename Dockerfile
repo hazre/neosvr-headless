@@ -51,11 +51,11 @@ RUN	adduser --disabled-login \
 		--uid ${HOSTUSERID} \
 		${USER}
 
-RUN	mkdir -p ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs /Scripts /nml_libs /nml_mods && \
+RUN	mkdir -p ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs /Scripts /nml_libs /nml_mods /Libraries && \
 	cd ${STEAMCMDDIR} && \
 	curl -sqL ${STEAMCMDURL} | tar zxfv - && \
 	curl -sqLo ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR}/nml_libs/0Harmony.dll ${NMLLIBURL} && \
-	chown -R ${USER}:${USER} ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs /nml_libs /nml_mods
+	chown -R ${USER}:${USER} ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs /nml_libs /nml_mods /Libraries
 
 COPY	./setup_neosvr.sh ./start_neosvr.sh /Scripts
 
