@@ -8,6 +8,8 @@ ARG	HOSTGROUPID
 ENV	STEAMAPPID=740250 \
 	STEAMAPP=neosvr \
 	STEAMCMDURL="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" \
+	NMLLIBURL="https://github.com/neos-modding-group/NeosModLoader/releases/latest/download/0Harmony.dll" \
+	NMLURL="https://github.com/neos-modding-group/NeosModLoader/releases/latest/download/NeosModLoader.dll" \
 	STEAMCMDDIR=/opt/steamcmd \
 	STEAMBETA=__CHANGEME__ \
 	STEAMBETAPASSWORD=__CHANGEME__ \
@@ -49,10 +51,11 @@ RUN	adduser --disabled-login \
 		--uid ${HOSTUSERID} \
 		${USER}
 
-RUN	mkdir -p ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs /Scripts && \
+RUN	mkdir -p ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs /Scripts /nml_libs /nml_mods && \
 	cd ${STEAMCMDDIR} && \
 	curl -sqL ${STEAMCMDURL} | tar zxfv - && \
-	chown -R ${USER}:${USER} ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs
+	curl -sqLo ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR}/nml_libs/0Harmony.dll ${NMLLIBURL} && \
+	chown -R ${USER}:${USER} ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} /Config /Logs /nml_libs /nml_mods
 
 COPY	./setup_neosvr.sh ./start_neosvr.sh /Scripts
 
@@ -64,7 +67,7 @@ USER ${USER}
 
 WORKDIR ${STEAMAPPDIR}
 
-VOLUME ["${STEAMAPPDIR}", "/Config", "/Logs"]
+VOLUME ["${STEAMAPPDIR}", "/Config", "/Logs", "/nml_libs", "/nml_mods"]
 
 STOPSIGNAL SIGINT
 

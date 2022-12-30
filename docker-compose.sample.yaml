@@ -2,7 +2,7 @@ version: "3.9"
 services:
   neosvr-headless:
     build:
-      context: https://github.com/Bontebok/neosvr-headless.git
+      context: https://github.com/hazre/neosvr-headless.git
       args:
        - HOSTUSERID=${HOSTUSERID:-1000}
        - HOSTGROUPID=${HOSTGROUPID:-1000}
@@ -18,4 +18,7 @@ services:
       - "./Config:/Config"
       - "./Logs:/Logs"
       - "/etc/localtime:/etc/localtime:ro"
+      # optional unless you enable mods
+      # - "./nml_libs:/nml_libs"
+      # - "./nml_mods:/nml_mods"
     restart: unless-stopped

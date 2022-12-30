@@ -15,4 +15,10 @@ if [ "$CLEANLOGS" = true ]; then
 	find /Logs -type f -name *.log -atime +30 -delete
 fi
 
+if [ "$MODS" = true ]; then
+	# https://github.com/neos-modding-group/NeosModLoader/issues/56
+	mkdir -p ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} "Neos_Data\Managed"
+	ln -s ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR}/FrooxEngine.dll "${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR}Neos_Data\Managed/FrooxEngine.dll"
+fi
+
 exec $*

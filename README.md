@@ -1,7 +1,7 @@
 # neosvr-headless
-Docker image of a NeosVR headless server, forked from https://github.com/shadowpanther/neosvr-headless
+Docker image of a NeosVR headless server, forked from https://github.com/bontebok/neosvr-headless
 
-Changed the behavior to map the UID of the internal docker image to the user who is maintaining the Config/Logs. Also added a work-around for the expired Let's Encrypt certificate so that the headless server can connect to hosts via HTTP GET/POST, WebSockets, etc.
+Adds support for mods.
 
 See NeosVR Discord for beta access key. Steam login is required to download the client. You'll have to disable SteamGuard, so probably create a separate Steam account for your headless server.
 
@@ -11,7 +11,7 @@ version: "3.9"
 services:
   neosvr-headless:
     build:
-      context: https://github.com/Bontebok/neosvr-headless.git
+      context: https://github.com/hazre/neosvr-headless.git
       args:
        - HOSTUSERID=${HOSTUSERID:-1000}
        - HOSTGROUPID=${HOSTGROUPID:-1000}
@@ -23,10 +23,14 @@ services:
       - STEAMLOGIN=${STEAMLOGIN}
       - CLEANASSETS=${CLEANASSETS:-true}
       - CLEANLOGS=${CLEANLOGS:-true}
+      - MODS=${MODS:-false}
     volumes:
       - "./Config:/Config"
       - "./Logs:/Logs"
       - "/etc/localtime:/etc/localtime:ro"
+      # optional unless you enable mods
+      # - "./nml_libs:/nml_libs"
+      # - "./nml_mods:/nml_mods"
     restart: unless-stopped
 ```
 
