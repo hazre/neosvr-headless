@@ -19,7 +19,7 @@ if [ "$MODS" = true ]; then
 	# https://github.com/neos-modding-group/NeosModLoader/issues/56
 	mkdir -p ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR} "Neos_Data\Managed"
 	ln -s ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR}/FrooxEngine.dll "${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR}Neos_Data\Managed/FrooxEngine.dll"
-	curl -sqLo ${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR}/Libraries/NeosModLoader.dll ${NMLURL}
+	curl -sqLo "${STEAMCMDDIR} ${HOMEDIR} ${STEAMAPPDIR}/Libraries\NeosModLoader.dll" ${NMLURL}
 fi
 
 exec $*
