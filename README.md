@@ -1,7 +1,7 @@
 # neosvr-headless
 Docker image of a NeosVR headless server, forked from https://github.com/bontebok/neosvr-headless
 
-Adds support for mods.
+Adds support for mods. (WIP, NOT READY TO BE USED)
 
 See NeosVR Discord for beta access key. Steam login is required to download the client. You'll have to disable SteamGuard, so probably create a separate Steam account for your headless server.
 
